@@ -1,0 +1,8 @@
+("is animal?" ("tiger" nil nil) (is build? (dormitry nil nil) (people nil nil)))
+
+1. check ( or nil(strcmp)
+2. check "
+3. get_string and check "
+5. call our function recursively for left_node
+5. call our function recursively for right_node
+6. check )
