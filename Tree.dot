@@ -1,8 +1,0 @@
-digraph Tree
-{
-	rankdir=HR;
-	node[shape=plaintext];
-	edge[color=white]
-	1 [shape = Mrecord, style = filled, fillcolor = #177245, label = "addres: 00000000007013E0 | data: 12345 | left(yes): 0000000000000000 | right(no): 0000000000000000 | parent: 0000000000000000 "];
-	All [shape = Mrecord, style = filled, fillcolor = "#8B00FF", label = "size = 0 "];
-}

@@ -3,22 +3,22 @@ CC=g++
 FLAGS=-c
 
 all: hello
-		hello1
+		akinator
 
-hello: main.o tree.o akinator.o recovery.o reader.o
-	$(CC) main.o tree.o akinator.o recovery.o reader.o -o hello1
+hello: main.o tree/tree.o akinator.o readrecover/recovery.o readrecover/reader.o
+	$(CC) main.o tree/tree.o akinator.o readrecover/recovery.o readrecover/reader.o -o akinator
 
-tree.o: tree.cpp
-	$(CC) $(FLAGS) tree.cpp
+tree.o: tree/tree.cpp
+	$(CC) $(FLAGS) tree/tree.cpp
 
 akinator.o: akinator.cpp
 	$(CC) $(FLAGS) akinator.cpp
 	
-recovery.o: recovery.cpp
-	$(CC) $(FLAGS) recovery.cpp
+recovery.o: readrecover/recovery.cpp
+	$(CC) $(FLAGS) readrecover/recovery.cpp
 
-reader.o: reader.cpp
-	$(CC) $(FLAGS) reader.cpp
+reader.o: readrecover/reader.cpp
+	$(CC) $(FLAGS) readrecover/reader.cpp
 
 main.o: main.cpp
 	$(CC) $(FLAGS) main.cpp

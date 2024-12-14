@@ -67,6 +67,9 @@ void ReplaceSymbol(struct Reader* read)
 
 }
 
+// fstat
+// rename
+
 unsigned int MyFstat(struct Reader* read)
 {
     int fseek_proof = fseek(read->file, 0, SEEK_END);

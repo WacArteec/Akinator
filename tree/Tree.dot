@@ -1,0 +1,7 @@
+digraph G{
+	rankdir=HR;
+	bgcolor = "#FFF0DB";
+	node0 [shape = Mrecord, style = filled, fillcolor = "#FFB02E", label = "Tree_addres: 000000000061FDF0 | root: 0000000000FE13E0 | size: 0"];
+	node1 [shape = Mrecord, style = filled, fillcolor = "#177245", label = "addres: 0000000000FE13E0 | data: assert | left(yes): 0000000000000000 | right(no): 0000000000000000 | parent: 0000000000000000 "];
+	node0 -> node1 [color = "#000000"]
+}

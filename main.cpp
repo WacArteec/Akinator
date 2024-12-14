@@ -1,26 +1,32 @@
 #include <stdio.h>
 
-#include "tree.h"
-#include "reader.h"
-#include "recovery.h"
+#include "tree/tree.h"
+#include "readrecover/reader.h"
+#include "readrecover/recovery.h"
 #include "akinator.h"
+
+
+/*
+СПРОСИТЬ ПРО МЭЙКФАЙЛ И ФАЙЛЫ ИЗ ДРУГИХ ПАПОК
+*/
 
 int main()
 {
-    /*struct Reader read = {};
-    printf("input_file = %s \n", read.input_file);
+    struct Reader read = {};
+$$$ printf("input_file = %s \n", read.input_file);
 
-    Input(&read);*/
+    Input(&read);
 
     struct Tree tree = {};
+    Ctor(&tree);
     
-//    tree.root = RecoverNode(&read, tree.root);
+    tree.root = RecoverNode(&read, NULL, &tree);
 
-//    Akinator(&tree);
+   Akinator(&tree);
 
-    char *tutu = "12345";
+//    char *tutu = "asser";
 
-    Ctor(&tree, tutu);
+//    Ctor(&tree, tutu);
     GraphDump(&tree);
 
     PrintNode(stdout, tree.root);

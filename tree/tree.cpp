@@ -18,16 +18,16 @@ int DotNode(FILE* dot_file, struct Node* leaf, Side agree, int parent_num);
 
 // add asserts
 
-void Ctor(struct Tree* tree, char* str)
+void Ctor(struct Tree* tree)
 {
     assert(tree);
-    assert(str);
 
     tree->root = (Node*) calloc(1, sizeof(Node));
 
-    tree->root->data = str;
+    tree->root->data = NULL;
 
     tree->root->parent = NULL;
+    tree->root->root_tree = tree;
 
     tree->root->right = NULL;
     tree->root->left  = NULL;
@@ -37,7 +37,7 @@ void Ctor(struct Tree* tree, char* str)
 
 // separate funcs for add node left or right
 
-void InsertNode(struct Tree* tree, struct Node* leaf, Side agree, char* data)
+void InsertNode(struct Node* leaf, Side agree, char* data)
 {
     switch (agree)
     {
@@ -55,7 +55,7 @@ void InsertNode(struct Tree* tree, struct Node* leaf, Side agree, char* data)
             break;
     }
 
-    tree->size++;
+    leaf->root_tree->size++;
 }
 
 Node* CreateNode(struct Node* leaf, char* data)
@@ -72,6 +72,7 @@ Node* CreateNode(struct Node* leaf, char* data)
     node->right = NULL;
 
     node->parent = leaf;
+    node->root_tree = leaf->root_tree;
 
     return node;
 }
@@ -111,17 +112,17 @@ void PrintNode(FILE* stream, struct Node* leaf)
 
 void DeleteNode(struct Node* leaf)
 {
-    assert(leaf);
-
     if(leaf == NULL)
         return;
 
-    if(leaf->parent->right == leaf)
-        leaf->parent->right  = NULL;
+    if(leaf->parent != NULL)
+    {
+        if(leaf->parent->right == leaf)
+            leaf->parent->right  = NULL;
 
-    else if(leaf->parent->left == leaf)
-        leaf->parent->left  = NULL;
-
+        else if(leaf->parent->left == leaf)
+            leaf->parent->left  = NULL;
+    }
 
     DeleteNode(leaf->right);
     DeleteNode(leaf->left);
@@ -137,9 +138,6 @@ void Dtor(struct Tree* tree)
     tree->size = 0;
 
     DeleteNode(tree->root);
-
-    free(tree->root);
-    tree->root = NULL;
 }
 
 void GraphDump(struct Tree* tree)
@@ -150,17 +148,25 @@ $$$ printf("\n\n%d\n\n", __LINE__);
     FILE* dot_file = fopen("Tree.dot", "wb");
     assert(dot_file);
 
-    fprintf(dot_file, "digraph Tree\n{\n\trankdir=HR;\n");
+    fprintf(dot_file, "digraph G{\n\trankdir=HR;\n");
 
-    fprintf(dot_file, "\tnode[shape=plaintext];\n\tedge[color=white]\n\t");
+    fprintf(dot_file, "\tbgcolor = \"#FFF0DB\";\n"); //\tnode[shape=plaintext];\n\tedge[color=white];\n instead of
+
+	fprintf(dot_file, "\tnode0 [shape = Mrecord, style = filled, fillcolor = \"#FFB02E\", label = \"Tree_addres: %p | root: %p | size: %u\"];\n", 
+                                                                                                            tree,      tree->root,tree->size);
 
     DotNode(dot_file, tree->root, ZERO, 0);
 
-    fprintf(dot_file, "\tAll [shape = Mrecord, style = filled, fillcolor = \"#8B00FF\", label = \"size = %u \"];\n}", tree->size);
+    fprintf(dot_file, "\tnode0 -> node1 [color = \"#000000\"]\n");
+
+//    fprintf(dot_file, "\tAll [shape = Mrecord, style = filled, fillcolor = \"#8B00FF\", label = \"size = %u \"];"\n}", tree->size);
+
+    fprintf(dot_file, "}");
 
     fclose(dot_file);
 
     system("dot -Tpng -O Tree.dot");
+    system("Tree.dot.png");
 }
 
 int DotNode(FILE* dot_file, struct Node* leaf, Side agree, int parent_num)
@@ -195,18 +201,18 @@ int DotNode(FILE* dot_file, struct Node* leaf, Side agree, int parent_num)
             break;
     }
     
-	fprintf(dot_file, "%d [shape = Mrecord, style = filled, fillcolor = %s, label = \"addres: %p | data: %s | left(yes): %p | right(no): %p | parent: %p \"];\n", 
-                       parent_num + 1,                                  color,                leaf,      leaf->data,     leaf->left,     leaf->right, leaf->parent);
+	fprintf(dot_file, "\tnode%d [shape = Mrecord, style = filled, fillcolor = \"%s\", label = \"addres: %p | data: %s | left(yes): %p | right(no): %p | parent: %p \"];\n", 
+                       parent_num + 1,                                          color,                  leaf,      leaf->data,     leaf->left,     leaf->right, leaf->parent);
 
     int left_child_num = DotNode(dot_file, leaf->left, YES, current_num);
 
     if(left_child_num != 0)
-        fprintf(dot_file, "%d -> %d [arrowsize = 1, weight = \"1\", color = \"#000000\", fontname = \"Times-New-Roman\"];\n\n", current_num, left_child_num);
+        fprintf(dot_file, "\tnode%d -> node%d [color = \"#000000\"\"]\n\n", current_num, left_child_num);
 
     int right_child_num = DotNode(dot_file, leaf->right, NO, left_child_num);
     
     if(right_child_num != 0)
-        fprintf(dot_file, "%d -> %d [arrowsize = 1, weight = \"1\", color = \"#000000\", fontname = \"Times-New-Roman\"];\n\n", current_num, right_child_num);
+        fprintf(dot_file, "\tnode%d -> node%d [color = \"#000000\"\"]\n\n", current_num, right_child_num);
 
     return current_num;
 }
